@@ -1,0 +1,46 @@
+{
+  "query": "como o agente deve estruturar services e respeitar multi-tenant com slug e banco?",
+  "answer_blocks": [
+    {
+      "text": "Estruture o código para que a regra de negócio fique nos services. As views devem ser finas, usar CBVs, receber o request, validar a entrada, chamar o service e devolver a resposta sem lógica de negócio.",
+      "supports": [
+        "services_1"
+      ]
+    },
+    {
+      "text": "Os services devem concentrar a regra, receber dependências e parâmetros explícitos, usar transação quando necessário e evitar duplicação de código.",
+      "supports": [
+        "services_1"
+      ]
+    },
+    {
+      "text": "Para multi-tenant, o sistema usa slug para identificar o tenant. A resolução do banco deve acontecer por um utilitário central e as queries devem usar db_alias explícito, chamado de banco.",
+      "supports": [
+        "multitenant_1"
+      ]
+    },
+    {
+      "text": "Empresa e filial devem ser obtidas da sessão ou dos headers, e normalmente usam os prefixos _empr e _fili para identificação.",
+      "supports": [
+        "multitenant_1"
+      ]
+    }
+  ],
+  "final_answer": "Estruture o código para que a regra de negócio fique nos services. As views devem ser finas, usar CBVs, receber o request, validar a entrada, chamar o service e devolver a resposta sem lógica de negócio.\n\nOs services devem concentrar a regra, receber dependências e parâmetros explícitos, usar transação quando necessário e evitar duplicação de código.\n\nPara multi-tenant, o sistema usa slug para identificar o tenant. A resolução do banco deve acontecer por um utilitário central e as queries devem usar db_alias explícito, chamado de banco.\n\nEmpresa e filial devem ser obtidas da sessão ou dos headers, e normalmente usam os prefixos _empr e _fili para identificação.",
+  "used_chunks": [
+    {
+      "id": "multitenant_1",
+      "brain": "dominio",
+      "title": "Multi Tenant",
+      "final_score": 0.888
+    },
+    {
+      "id": "services_1",
+      "brain": "padroes",
+      "title": "Services",
+      "final_score": 0.8238
+    }
+  ],
+  "limitations": [],
+  "grounded": true
+}

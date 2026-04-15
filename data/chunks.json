@@ -1,0 +1,68 @@
+[
+  {
+    "id": "multitenant_1",
+    "brain": "dominio",
+    "type": "secao_markdown",
+    "title": "Multi Tenant",
+    "content": "O sistema utiliza slug para identificar o tenant.\n\nA resolução do banco deve ocorrer por utilitário central.\nQueries devem usar db_alias explícito que chamamos de banco.\nEmpresa e filial podem vir de sessão ou headers.\nNormalmente usamos o prefixo de _empr, e _fili para identificar empresas e filiais\nPEga sempre empresa e filial da Sessão ou Headers.",
+    "tags": [
+      "dominio",
+      "multitenant"
+    ],
+    "priority": 5,
+    "source": "knowledge\\dominio\\multitenant.md",
+    "version": "1.0.0",
+    "related_entities": [],
+    "metadata": {
+      "file_name": "multitenant.md",
+      "section_title": "Multi Tenant",
+      "chunk_index": 1,
+      "char_count": 352,
+      "total_chunks_in_file": 1
+    }
+  },
+  {
+    "id": "agente_base_1",
+    "brain": "identidade",
+    "type": "secao_markdown",
+    "title": "Agente Base",
+    "content": "Agente Especializado em:\nPython com Django - Utilizando DRF, CBVs e padões de projeto\nJavaScript com ReactNAtive - Utilizando Componentização e hooks estruturados\n\nDeve Priorizar:\n- Clareza de implementação\n- services para regra de negócio, sempre priorizar por funções simples e concisas\n- views finas\n- serializers como contrato\n- suporte multi-tenant com slug e db_alias\n\nEle deve evitar:\n\n- regra de negócio em views\n- lógica espalhada\n- respostas genéricas sem aderência ao sistema",
+    "tags": [
+      "identidade",
+      "agente_base"
+    ],
+    "priority": 5,
+    "source": "knowledge\\identidade\\agente_base.md",
+    "version": "1.0.0",
+    "related_entities": [],
+    "metadata": {
+      "file_name": "agente_base.md",
+      "section_title": "Agente Base",
+      "chunk_index": 1,
+      "char_count": 486,
+      "total_chunks_in_file": 1
+    }
+  },
+  {
+    "id": "services_1",
+    "brain": "padroes",
+    "type": "secao_markdown",
+    "title": "Services",
+    "content": "Toda regra de negócio relevante deve ficar em services.\n\nViews devem:\n\n- ser finas\n- sempre usar CBVs\n- receber request\n- validar entrada\n- chamar service\n- devolver resposta\n- não ter lógica de negócio\n\nServices devem:\n\n- concentrar regra\n- usar transação quando necessário\n- receber dependências e parâmetros explícitos\n- criar serviços baseados nos modelos e regras explicitas\n- evitar duplicação de código",
+    "tags": [
+      "padroes",
+      "services"
+    ],
+    "priority": 5,
+    "source": "knowledge\\padroes\\services.md",
+    "version": "1.0.0",
+    "related_entities": [],
+    "metadata": {
+      "file_name": "services.md",
+      "section_title": "Services",
+      "chunk_index": 1,
+      "char_count": 409,
+      "total_chunks_in_file": 1
+    }
+  }
+]

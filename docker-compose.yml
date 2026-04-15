@@ -1,0 +1,18 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: brain_pgvector
+    environment:
+      POSTGRES_DB: brain
+      POSTGRES_USER: brain_user
+      POSTGRES_PASSWORD: brain_pass
+    ports:
+      - '5433:5432'
+    volumes:
+      - pgdata_brain:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  pgdata_brain:

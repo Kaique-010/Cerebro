@@ -1,0 +1,59 @@
+{
+  "query": "como o agente deve estruturar services e respeitar multi-tenant com slug e banco?",
+  "intent": "implementacao_tecnica",
+  "selected_chunks": [
+    {
+      "id": "multitenant_1",
+      "brain": "dominio",
+      "title": "Multi Tenant",
+      "content": "O sistema utiliza slug para identificar o tenant.\n\nA resolução do banco deve ocorrer por utilitário central.\nQueries devem usar db_alias explícito que chamamos de banco.\nEmpresa e filial podem vir de sessão ou headers.\nNormalmente usamos o prefixo de _empr, e _fili para identificar empresas e filiais\nPEga sempre empresa e filial da Sessão ou Headers.",
+      "vector_score": 0.6672738544275113,
+      "rerank_score": 0.95,
+      "final_score": 0.901,
+      "priority": 5,
+      "tags": [
+        "dominio",
+        "multitenant"
+      ],
+      "source": "knowledge\\dominio\\multitenant.md",
+      "metadata": {
+        "file_name": "multitenant.md",
+        "char_count": 352,
+        "chunk_index": 1,
+        "section_title": "Multi Tenant",
+        "total_chunks_in_file": 1
+      },
+      "selection_reason": "Responde de forma muito direta à parte multi-tenant: uso de slug para identificar tenant, resolução central do banco e queries com db_alias explícito. É o melhor candidato específico sobre tenant/banco, embora não trate tanto da estrutura de services."
+    },
+    {
+      "id": "services_1",
+      "brain": "padroes",
+      "title": "Services",
+      "content": "Toda regra de negócio relevante deve ficar em services.\n\nViews devem:\n\n- ser finas\n- sempre usar CBVs\n- receber request\n- validar entrada\n- chamar service\n- devolver resposta\n- não ter lógica de negócio\n\nServices devem:\n\n- concentrar regra\n- usar transação quando necessário\n- receber dependências e parâmetros explícitos\n- criar serviços baseados nos modelos e regras explicitas\n- evitar duplicação de código",
+      "vector_score": 0.5580157377001985,
+      "rerank_score": 0.89,
+      "final_score": 0.8238,
+      "priority": 5,
+      "tags": [
+        "padroes",
+        "services"
+      ],
+      "source": "knowledge\\padroes\\services.md",
+      "metadata": {
+        "file_name": "services.md",
+        "char_count": 409,
+        "chunk_index": 1,
+        "section_title": "Services",
+        "total_chunks_in_file": 1
+      },
+      "selection_reason": "É altamente relevante para a parte de services, explicando que a regra de negócio deve ficar em services e que views devem ser finas e chamar o service. Porém não aborda multi-tenant, slug ou banco, então fica abaixo dos dois anteriores."
+    }
+  ],
+  "discarded_chunks": [
+    {
+      "id": "agente_base_1",
+      "reason": "Não entrou no top final após score combinado"
+    }
+  ],
+  "context_text": "CONSULTA DO USUÁRIO:\ncomo o agente deve estruturar services e respeitar multi-tenant com slug e banco?\n\n\nINTENÇÃO DETECTADA:\nimplementacao_tecnica\n\n\nCONTEXTO SELECIONADO:\n\n[1] ID: multitenant_1\nBRAIN: dominio\nTÍTULO: Multi Tenant\nSCORE FINAL: 0.901\nMOTIVO DA SELEÇÃO: Responde de forma muito direta à parte multi-tenant: uso de slug para identificar tenant, resolução central do banco e queries com db_alias explícito. É o melhor candidato específico sobre tenant/banco, embora não trate tanto da estrutura de services.\nCONTEÚDO:\nO sistema utiliza slug para identificar o tenant.\n\nA resolução do banco deve ocorrer por utilitário central.\nQueries devem usar db_alias explícito que chamamos de banco.\nEmpresa e filial podem vir de sessão ou headers.\nNormalmente usamos o prefixo de _empr, e _fili para identificar empresas e filiais\nPEga sempre empresa e filial da Sessão ou Headers.\n\n[2] ID: services_1\nBRAIN: padroes\nTÍTULO: Services\nSCORE FINAL: 0.8238\nMOTIVO DA SELEÇÃO: É altamente relevante para a parte de services, explicando que a regra de negócio deve ficar em services e que views devem ser finas e chamar o service. Porém não aborda multi-tenant, slug ou banco, então fica abaixo dos dois anteriores.\nCONTEÚDO:\nToda regra de negócio relevante deve ficar em services.\n\nViews devem:\n\n- ser finas\n- sempre usar CBVs\n- receber request\n- validar entrada\n- chamar service\n- devolver resposta\n- não ter lógica de negócio\n\nServices devem:\n\n- concentrar regra\n- usar transação quando necessário\n- receber dependências e parâmetros explícitos\n- criar serviços baseados nos modelos e regras explicitas\n- evitar duplicação de código"
+}
