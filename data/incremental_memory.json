@@ -1,0 +1,12 @@
+{
+  "decisions": [],
+  "interactions": [
+    {
+      "query": "como é definido os services e as views?",
+      "answer": "As regras de negócio relevantes devem ficar em services. Eles devem concentrar a regra, evitar duplicação de código, receber dependências e parâmetros explícitos e usar transação quando necessário.\n\nAs views devem ser finas, sempre usar CBVs, receber o request, validar a entrada, chamar o service e devolver a resposta.\n\nAs views não devem ter lógica de negócio; essa lógica deve ficar nos services.",
+      "grounded": true,
+      "created_at": "2026-04-15T00:45:51.500015+00:00"
+    }
+  ],
+  "updated_at": "2026-04-15T00:45:51.500015+00:00"
+}
