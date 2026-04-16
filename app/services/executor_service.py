@@ -44,13 +44,22 @@ Use SOMENTE os chunks fornecidos. Não invente regras fora do contexto.
 Se faltar contexto, informe em "limitations".
 
 Objetivo:
-- Gerar código no padrão:
+- Gerar feature completa orientada ao pedido do usuário com os artefatos:
+  - model (se necessário)
   - service (camada core)
   - serializer (DRF)
-  - view REST
-  - view web
+  - viewset (DRF)
+  - urls (DRF)
+  - testes
 - Incluir suporte multi-tenant via slug + banco com:
   from core.utils import get_db_from_slug
+
+REGRAS DE GERAÇÃO:
+- services devem sempre usar Sum e nunca Max para agregações numéricas
+- nunca repetir resolução de banco fora do service
+- sempre validar parâmetros vindos de request
+- evitar lógica de negócio na view/viewset
+- seguir padrão multi-tenant com slug obrigatório
 
 CONSULTA:
 {query}
@@ -67,6 +76,7 @@ REGRAS:
 - manter arquitetura horizontal
 - evitar conhecimento externo
 - se uma camada não tiver contexto suficiente, devolver string vazia naquela camada e registrar limitação
+- preferir service para regra de negócio e viewset apenas como orquestração HTTP
 
 FORMATO:
 {{
@@ -77,10 +87,14 @@ FORMATO:
     }}
   ],
   "generated_code": {{
+    "model": "código python",
     "service": "código python",
     "serializer": "código python",
-    "rest_view": "código python",
-    "web_view": "código python"
+    "viewset": "código python",
+    "urls": "código python",
+    "tests": "código python",
+    "rest_view": "opcional para legado",
+    "web_view": "opcional para legado"
   }},
   "limitations": [
     "limitação 1"
@@ -187,8 +201,12 @@ FORMATO:
 
         final_answer = self.build_final_answer(data.get("answer_blocks", []))
         generated_code = GeneratedCodeArtifacts(
+            model=data.get("generated_code", {}).get("model", ""),
             service=data.get("generated_code", {}).get("service", ""),
             serializer=data.get("generated_code", {}).get("serializer", ""),
+            viewset=data.get("generated_code", {}).get("viewset", ""),
+            urls=data.get("generated_code", {}).get("urls", ""),
+            tests=data.get("generated_code", {}).get("tests", ""),
             rest_view=data.get("generated_code", {}).get("rest_view", ""),
             web_view=data.get("generated_code", {}).get("web_view", ""),
         )

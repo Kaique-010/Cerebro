@@ -15,8 +15,12 @@ class AnswerBlock(BaseModel):
 
 
 class GeneratedCodeArtifacts(BaseModel):
+    model: str = ""
     service: str = ""
     serializer: str = ""
+    viewset: str = ""
+    urls: str = ""
+    tests: str = ""
     rest_view: str = ""
     web_view: str = ""
 

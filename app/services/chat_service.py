@@ -77,10 +77,14 @@ class ChatService:
     def _format_generated_code(self, generated_code: dict) -> str:
         blocks: list[str] = []
         mapping = [
+            ("model", "Model"),
             ("service", "Service"),
             ("serializer", "Serializer"),
-            ("rest_view", "View REST"),
-            ("web_view", "View Web"),
+            ("viewset", "ViewSet"),
+            ("urls", "URLs"),
+            ("tests", "Testes"),
+            ("rest_view", "View REST (legado)"),
+            ("web_view", "View Web (legado)"),
         ]
         for key, label in mapping:
             content = generated_code.get(key, "").strip()
