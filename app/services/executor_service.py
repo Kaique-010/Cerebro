@@ -60,6 +60,9 @@ REGRAS:
 - cada bloco deve ser suportado por 1 ou mais chunk IDs
 - não cite chunk que não sustenta diretamente a afirmação
 - não use nenhum conhecimento externo
+- não crie blocos conclusivos genéricos
+- cada bloco deve trazer orientação concreta, regra concreta ou limitação concreta
+- evite frases vagas como "o padrão é aderente", "é reutilizável", "é testável", salvo se isso responder diretamente à consulta
 - devolva apenas JSON válido
 
 FORMATO:

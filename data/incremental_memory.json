@@ -6,7 +6,13 @@
       "answer": "As regras de negócio relevantes devem ficar em services. Eles devem concentrar a regra, evitar duplicação de código, receber dependências e parâmetros explícitos e usar transação quando necessário.\n\nAs views devem ser finas, sempre usar CBVs, receber o request, validar a entrada, chamar o service e devolver a resposta.\n\nAs views não devem ter lógica de negócio; essa lógica deve ficar nos services.",
       "grounded": true,
       "created_at": "2026-04-15T00:45:51.500015+00:00"
+    },
+    {
+      "query": "vamos fazer um service de lançamentos para manutenção em frotas",
+      "answer": "Sim — para um service de lançamentos de manutenção em frotas, a regra de negócio principal deve ficar em services, e a view deve ser fina: receber request, validar a entrada, chamar o service e devolver a resposta, sem lógica de negócio.\n\nO service deve concentrar a regra de negócio, receber dependências e parâmetros explícitos, evitar duplicação e usar transação quando necessário.\n\nSe esse lançamento for multi-tenant, o sistema usa slug para identificar o tenant; a resolução do banco deve ocorrer por utilitário central; as queries devem usar db_alias explícito chamado banco; e empresa/filial devem ser obtidas da sessão ou headers.",
+      "grounded": true,
+      "created_at": "2026-04-15T23:30:06.067147+00:00"
     }
   ],
-  "updated_at": "2026-04-15T00:45:51.500015+00:00"
+  "updated_at": "2026-04-15T23:30:06.067147+00:00"
 }

@@ -2,48 +2,52 @@
   "query": "como o agente deve estruturar services e respeitar multi-tenant com slug e banco?",
   "answer_blocks": [
     {
-      "text": "Estruture a lógica de negócio em services: toda regra relevante deve ficar neles, que devem concentrar a regra, evitar duplicação de código e usar transação quando necessário.",
+      "text": "Estruture o service para concentrar a regra de negócio, recebendo parâmetros explícitos e mantendo a separação entre view e service.",
       "supports": [
-        "services_1"
+        "abastecimento_service_1"
       ]
     },
     {
-      "text": "As views devem ser finas: usar CBVs, receber o request, validar entrada, chamar o service e devolver a resposta, sem conter lógica de negócio.",
-      "supports": [
-        "services_1"
-      ]
-    },
-    {
-      "text": "Para multi-tenant, o sistema usa slug para identificar o tenant. A resolução do banco deve ocorrer por um utilitário central, e as queries devem usar db_alias explícito, chamado de banco.",
+      "text": "No service, use o banco de forma explícita: as queries devem receber db_alias explícito, chamado de banco.",
       "supports": [
         "multitenant_1"
       ]
     },
     {
-      "text": "Empresa e filial devem ser obtidas da sessão ou dos headers; o material cita também os prefixos _empr e _fili para identificar empresas e filiais.",
+      "text": "Para multi-tenant, a identificação do tenant é feita por slug. A resolução do banco deve ocorrer por um utilitário central, que ajuda a rotear bancos e evitar duplicação de código.",
+      "supports": [
+        "multitenant_1",
+        "utils_db_from_slug_1"
+      ]
+    },
+    {
+      "text": "Empresa e filial devem ser obtidas da Sessão ou dos Headers, normalmente usando os prefixos _empr e _fili para identificar empresa e filial.",
       "supports": [
         "multitenant_1"
       ]
     }
   ],
-  "final_answer": "Estruture a lógica de negócio em services: toda regra relevante deve ficar neles, que devem concentrar a regra, evitar duplicação de código e usar transação quando necessário.\n\nAs views devem ser finas: usar CBVs, receber o request, validar entrada, chamar o service e devolver a resposta, sem conter lógica de negócio.\n\nPara multi-tenant, o sistema usa slug para identificar o tenant. A resolução do banco deve ocorrer por um utilitário central, e as queries devem usar db_alias explícito, chamado de banco.\n\nEmpresa e filial devem ser obtidas da sessão ou dos headers; o material cita também os prefixos _empr e _fili para identificar empresas e filiais.",
+  "final_answer": "Estruture o service para concentrar a regra de negócio, recebendo parâmetros explícitos e mantendo a separação entre view e service.\n\nNo service, use o banco de forma explícita: as queries devem receber db_alias explícito, chamado de banco.\n\nPara multi-tenant, a identificação do tenant é feita por slug. A resolução do banco deve ocorrer por um utilitário central, que ajuda a rotear bancos e evitar duplicação de código.\n\nEmpresa e filial devem ser obtidas da Sessão ou dos Headers, normalmente usando os prefixos _empr e _fili para identificar empresa e filial.",
   "used_chunks": [
+    {
+      "id": "abastecimento_service_1",
+      "brain": "services",
+      "title": "Service de Abastecimento",
+      "final_score": 1.1134
+    },
     {
       "id": "multitenant_1",
       "brain": "dominio",
       "title": "Multi Tenant",
-      "final_score": 0.8945
+      "final_score": 1.021
     },
     {
-      "id": "services_1",
-      "brain": "padroes",
-      "title": "Services",
-      "final_score": 0.8238
+      "id": "utils_db_from_slug_1",
+      "brain": "utils",
+      "title": "Util Principal do sistema de roteamento",
+      "final_score": 0.9617
     }
   ],
-  "limitations": [
-    "Os chunks não detalham como implementar o utilitário central de resolução do banco, apenas informam que ele deve existir.",
-    "Os chunks não explicam como o service deve receber ou propagar o db_alias/banco na prática."
-  ],
+  "limitations": [],
   "grounded": true
 }

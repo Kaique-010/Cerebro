@@ -22,8 +22,8 @@ def run_query():
 
     retrieval_result = retrieval_brain.search(
         query=query,
-        top_k_vector=8,
-        top_k_final=2,
+        top_k_vector=10,
+        top_k_final=3,
     )
 
     context_result = retrieval_result["context_result"]
