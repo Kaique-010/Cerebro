@@ -40,6 +40,12 @@ chat_service: ChatService = st.session_state.chat_service
 
 with st.sidebar:
     st.header("⚙️ Executor com Tools")
+    response_mode = st.selectbox(
+        "Modo de resposta",
+        options=["codegen", "answer"],
+        index=0,
+        format_func=lambda item: "Opção 3 • Gerar código" if item == "codegen" else "Resposta textual",
+    )
     selected_tool = st.selectbox("Tool", chat_service.available_tools())
     tool_payload = st.text_input("Payload da tool", placeholder="Texto opcional")
 
@@ -69,7 +75,7 @@ if prompt:
 
     with st.chat_message("assistant"):
         with st.spinner("Pensando..."):
-            result = chat_service.chat(prompt)
+            result = chat_service.chat(prompt, mode=response_mode)
 
         st.markdown(result["answer"])
 

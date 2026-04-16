@@ -74,7 +74,27 @@ class ChatService:
             "```"
         )
 
-    def chat(self, query: str, top_k_vector: int = 8, top_k_final: int = 3) -> dict:
+    def _format_generated_code(self, generated_code: dict) -> str:
+        blocks: list[str] = []
+        mapping = [
+            ("service", "Service"),
+            ("serializer", "Serializer"),
+            ("rest_view", "View REST"),
+            ("web_view", "View Web"),
+        ]
+        for key, label in mapping:
+            content = generated_code.get(key, "").strip()
+            if content:
+                blocks.append(f"### {label}\n```python\n{content}\n```")
+        return "\n\n".join(blocks).strip()
+
+    def chat(
+        self,
+        query: str,
+        top_k_vector: int = 8,
+        top_k_final: int = 3,
+        mode: str = "answer",
+    ) -> dict:
         retrieval = self.retrieval_brain.search(
             query=query,
             top_k_vector=top_k_vector,
@@ -82,10 +102,18 @@ class ChatService:
         )
 
         context_result = retrieval["context_result"]
-        execution = self.executor_brain.run(query=query, context_result=context_result)
+        execution = self.executor_brain.run(
+            query=query,
+            context_result=context_result,
+            mode=mode,
+        )
 
         final_answer = execution["final_answer"]
-        if self._should_include_code_example(query):
+        if mode == "codegen":
+            generated_code = self._format_generated_code(execution.get("generated_code", {}))
+            if generated_code:
+                final_answer = f"{final_answer}\n\n{generated_code}".strip()
+        elif self._should_include_code_example(query):
             final_answer = f"{final_answer}\n\nExemplo prático:\n{self._build_code_example()}"
 
         self.memory.add_interaction(
@@ -101,4 +129,5 @@ class ChatService:
             "limitations": execution["limitations"],
             "grounded": execution["grounded"],
             "used_chunks": execution["used_chunks"],
+            "generated_code": execution.get("generated_code", {}),
         }
