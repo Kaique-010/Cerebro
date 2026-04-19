@@ -4,6 +4,7 @@ from app.services.embedding_service import EmbeddingService
 from app.services.reranker_service import RerankerService
 from app.services.intent_service import IntentService
 from app.services.context_builder import ContextBuilderService
+from app.core.logging import get_logger
 
 
 class RetrievalBrain:
@@ -13,6 +14,7 @@ class RetrievalBrain:
         self.reranker = RerankerService()
         self.intent_service = IntentService()
         self.context_builder = ContextBuilderService()
+        self.logger = get_logger("brain.retrieval")
 
     def search(
         self,
@@ -22,6 +24,14 @@ class RetrievalBrain:
         brains: list[str] | None = None
     ) -> dict:
         intent = self.intent_service.classify(query)
+        self.logger.info(
+            "Busca iniciada | query=%s | intent=%s | top_k_vector=%s | top_k_final=%s | brains=%s",
+            query[:200],
+            intent,
+            top_k_vector,
+            top_k_final,
+            brains,
+        )
         query_embedding = self.embedding_service.embed_text(query)
 
         with SessionLocal() as db:
@@ -44,6 +54,24 @@ class RetrievalBrain:
             reranked_items=reranked,
             top_k_final=top_k_final,
         )
+
+        selected_chunks = context_result.selected_chunks
+        self.logger.info(
+            "Busca concluída | vector_candidates=%s | reranked=%s | selected=%s",
+            len(candidates),
+            len(reranked),
+            len(selected_chunks),
+        )
+        for chunk in selected_chunks:
+            source = chunk.metadata.get("file_name", "desconhecido")
+            self.logger.info(
+                "Chunk selecionado | id=%s | brain=%s | title=%s | score=%s | source=%s",
+                chunk.id,
+                chunk.brain,
+                chunk.title,
+                chunk.final_score,
+                source,
+            )
 
         return {
             "query": query,
