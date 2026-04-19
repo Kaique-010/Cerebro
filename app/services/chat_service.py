@@ -144,11 +144,33 @@ class ChatService:
         top_k_final: int = 3,
         mode: str = "answer",
     ) -> dict:
-        retrieval = self.retrieval_brain.search(
-            query=query,
-            top_k_vector=top_k_vector,
-            top_k_final=top_k_final,
-        )
+        try:
+            retrieval = self.retrieval_brain.search(
+                query=query,
+                top_k_vector=top_k_vector,
+                top_k_final=top_k_final,
+            )
+        except Exception as exc:
+            self.logger.exception("Falha durante retrieval/search")
+            fallback_answer = (
+                "Não consegui concluir a busca agora (timeout ou falha externa). "
+                "Tente novamente em alguns segundos."
+            )
+            self.memory.add_interaction(
+                query=query,
+                answer=fallback_answer,
+                grounded=False,
+            )
+            return {
+                "query": query,
+                "intent": "debug",
+                "answer": fallback_answer,
+                "limitations": [f"Falha na busca: {type(exc).__name__}"],
+                "grounded": False,
+                "used_chunks": [],
+                "generated_code": {},
+                "auto_tools_executed": [],
+            }
         self.logger.info(
             "Orquestração chat | intent=%s | selected_chunks=%s",
             retrieval["intent"],
@@ -156,11 +178,24 @@ class ChatService:
         )
 
         context_result = retrieval["context_result"]
-        execution = self.executor_brain.run(
-            query=query,
-            context_result=context_result,
-            mode=mode,
-        )
+        try:
+            execution = self.executor_brain.run(
+                query=query,
+                context_result=context_result,
+                mode=mode,
+            )
+        except Exception as exc:
+            self.logger.exception("Falha durante executor/run")
+            execution = {
+                "final_answer": (
+                    "Consegui recuperar contexto, mas a geração da resposta falhou agora. "
+                    "Tente novamente em alguns segundos."
+                ),
+                "limitations": [f"Falha no executor: {type(exc).__name__}"],
+                "grounded": False,
+                "used_chunks": [],
+                "generated_code": {},
+            }
 
         auto_tools_executed: list[dict] = []
         for tool_name, tool_payload in self._auto_tool_plan(query=query, intent=retrieval["intent"]):

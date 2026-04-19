@@ -9,6 +9,8 @@ class Settings:
     OPENAI_EMBEDDING_MODEL = os.getenv("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small")
     OPENAI_RERANK_MODEL = os.getenv("OPENAI_RERANK_MODEL", "gpt-5.4-mini")
     OPENAI_EXECUTOR_MODEL = os.getenv("OPENAI_EXECUTOR_MODEL", "gpt-5.4-mini")
+    OPENAI_TIMEOUT_SECONDS = float(os.getenv("OPENAI_TIMEOUT_SECONDS", "30"))
+    OPENAI_MAX_RETRIES = int(os.getenv("OPENAI_MAX_RETRIES", "1"))
 
     POSTGRES_HOST = os.getenv("POSTGRES_HOST", "localhost")
     POSTGRES_PORT = int(os.getenv("POSTGRES_PORT", "5433"))
