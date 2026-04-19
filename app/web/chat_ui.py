@@ -46,15 +46,8 @@ with st.sidebar:
         index=0,
         format_func=lambda item: "Opção 3 • Gerar código" if item == "codegen" else "Resposta textual",
     )
-    selected_tool = st.selectbox("Tool", chat_service.available_tools())
-    tool_payload = st.text_input("Payload da tool", placeholder="Texto opcional")
-
-    if st.button("Executar tool", use_container_width=True):
-        tool_result = chat_service.run_tool(selected_tool, tool_payload)
-        st.success(f"{tool_result.name}: {tool_result.output}")
-
     st.divider()
-    st.caption("Memória incremental ativa: decisões + interações.")
+    st.caption("Tools automáticas por intenção ativas.")
 
 st.markdown("<div class='app-title'>Cérebro • Chat Interface</div>", unsafe_allow_html=True)
 st.markdown(
@@ -77,11 +70,16 @@ if prompt:
         with st.spinner("Pensando..."):
             result = chat_service.chat(prompt, mode=response_mode)
 
-        st.markdown(result["answer"])
+        streamed_text = st.write_stream(chat_service.stream_text(result["answer"]))
 
         if result["limitations"]:
             with st.expander("Limitações detectadas"):
                 for limitation in result["limitations"]:
                     st.write(f"- {limitation}")
 
-    st.session_state.messages.append({"role": "assistant", "content": result["answer"]})
+        if result.get("auto_tools_executed"):
+            with st.expander("Tools automáticas executadas"):
+                for item in result["auto_tools_executed"]:
+                    st.write(f"- {item['tool']} ({item['payload']}): {item['output']}")
+
+    st.session_state.messages.append({"role": "assistant", "content": streamed_text})
