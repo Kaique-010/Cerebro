@@ -2,16 +2,29 @@ import json
 from openai import OpenAI
 
 from app.core.config import settings
+from app.core.logging import get_logger
 
 
 class RerankerService:
     def __init__(self):
-        self.client = OpenAI(api_key=settings.OPENAI_API_KEY)
+        self.client = OpenAI(
+            api_key=settings.OPENAI_API_KEY,
+            timeout=settings.OPENAI_TIMEOUT_SECONDS,
+            max_retries=settings.OPENAI_MAX_RETRIES,
+        )
         self.model = settings.OPENAI_RERANK_MODEL
+        self.logger = get_logger("service.reranker")
 
     def rerank(self, query: str, candidates: list[dict], top_k: int = 5) -> list[dict]:
         if not candidates:
             return []
+
+        self.logger.info(
+            "Rerank iniciado | model=%s | candidates=%s | top_k=%s",
+            self.model,
+            len(candidates),
+            top_k,
+        )
 
         compact_candidates = []
         for idx, item in enumerate(candidates, start=1):
@@ -80,5 +93,6 @@ Regras:
                 ranked.append(merged)
 
         ranked.sort(key=lambda x: x.get("rerank_score", 0), reverse=True)
+        self.logger.info("Rerank concluído | retornados=%s", len(ranked[:top_k]))
         
         return ranked[:top_k]

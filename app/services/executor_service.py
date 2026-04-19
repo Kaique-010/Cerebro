@@ -2,6 +2,7 @@ import json
 from openai import OpenAI
 
 from app.core.config import settings
+from app.core.logging import get_logger
 from app.schemas.executor import (
     ExecutorResult,
     ExecutorChunkRef,
@@ -12,8 +13,13 @@ from app.schemas.executor import (
 
 class ExecutorService:
     def __init__(self):
-        self.client = OpenAI(api_key=settings.OPENAI_API_KEY)
+        self.client = OpenAI(
+            api_key=settings.OPENAI_API_KEY,
+            timeout=settings.OPENAI_TIMEOUT_SECONDS,
+            max_retries=settings.OPENAI_MAX_RETRIES,
+        )
         self.model = settings.OPENAI_EXECUTOR_MODEL
+        self.logger = get_logger("service.executor")
 
     def build_prompt(self, query: str, context_result: dict, mode: str = "answer") -> str:
         selected_chunks = context_result.get("selected_chunks", [])
@@ -172,11 +178,18 @@ FORMATO:
 
     def execute(self, query: str, context_result: dict, mode: str = "answer") -> ExecutorResult:
         prompt = self.build_prompt(query=query, context_result=context_result, mode=mode)
+        self.logger.info(
+            "Execução iniciada | model=%s | mode=%s | selected_chunks=%s",
+            self.model,
+            mode,
+            len(context_result.get("selected_chunks", [])),
+        )
 
         response = self.client.responses.create(
             model=self.model,
             input=prompt
         )
+        self.logger.info("Execução concluída")
 
         raw_text = response.output_text
         data = self.safe_parse_json(raw_text)

@@ -32,8 +32,12 @@ class RetrievalBrain:
             top_k_final,
             brains,
         )
-        query_embedding = self.embedding_service.embed_text(query)
 
+        self.logger.info("Etapa retrieval: gerando embedding")
+        query_embedding = self.embedding_service.embed_text(query)
+        self.logger.info("Etapa retrieval: embedding concluído")
+
+        self.logger.info("Etapa retrieval: semantic search")
         with SessionLocal() as db:
             candidates = self.repository.semantic_search(
                 db=db,
@@ -41,12 +45,15 @@ class RetrievalBrain:
                 top_k=top_k_vector,
                 brains=brains,
             )
+        self.logger.info("Etapa retrieval: semantic search concluída | candidates=%s", len(candidates))
 
+        self.logger.info("Etapa retrieval: rerank")
         reranked = self.reranker.rerank(
             query=query,
             candidates=candidates,
             top_k=top_k_vector,
         )
+        self.logger.info("Etapa retrieval: rerank concluído | reranked=%s", len(reranked))
 
         context_result = self.context_builder.select(
             query=query,
